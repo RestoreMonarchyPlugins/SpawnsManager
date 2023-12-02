@@ -77,7 +77,6 @@ namespace RestoreMonarchy.SpawnsManager
 
         private void OnPreLevelLoaded(int level)
         {
-            LevelVehicles.load();
             Logger.Log("Loading spawn assets...", ConsoleColor.Yellow);
             foreach (SpawnAssetConfig spawnAssetConfig in Configuration.Instance.SpawnAssets)
             {
