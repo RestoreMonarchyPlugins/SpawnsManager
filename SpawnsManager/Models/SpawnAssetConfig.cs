@@ -13,8 +13,12 @@ namespace RestoreMonarchy.SpawnsManager.Models
         public ushort Id { get; set; }
         [XmlAttribute]
         public string Name { get; set; }
+        [XmlAttribute]
+        public string Description { get; set; }
 
         [XmlArrayItem("Table")]
         public SpawnTableConfig[] Tables { get; set; }
+
+        public bool ShouldSerializeDescription() => !string.IsNullOrEmpty(Description);
     }
 }

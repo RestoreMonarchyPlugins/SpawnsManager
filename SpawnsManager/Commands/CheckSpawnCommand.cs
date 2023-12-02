@@ -26,6 +26,14 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 return;
             }
 
+            bool isVehicle = false;
+
+            string arg2 = command.ElementAtOrDefault(1);
+            if (string.IsNullOrEmpty(arg2))
+            {
+                bool.TryParse(arg2, out isVehicle);
+            }
+
             SpawnAsset spawnAsset = Assets.find(EAssetType.SPAWN, spawnId) as SpawnAsset;
             if (spawnAsset == null)
             {
@@ -33,7 +41,7 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 return;
             }
             
-            List<SpawnItemInfo> spawnItems = GetSpawnItems(spawnAsset);
+            List<SpawnItemInfo> spawnItems = pluginInstance.GetSpawnItems(spawnAsset, isVehicle);
 
             int sumWeight = spawnItems.Sum(x => x.Weight);
 
@@ -43,38 +51,6 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 decimal chance = Math.Round((decimal)spawnItem.Weight / sumWeight * 100, 4);
                 UnturnedChat.Say(caller, $"- {spawnItem.Name} ({spawnItem.AssetId}) has {chance}% ({spawnItem.Weight}) chance", pluginInstance.MessageColor);
             }
-        }
-
-        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset)
-        {
-            List<SpawnItemInfo> spawnItems = new();
-
-            foreach (SpawnTable spawnTable in spawnAsset.tables)
-            {
-                Asset asset = spawnTable.FindAsset(EAssetType.ITEM);
-
-                if (asset == null)
-                {
-                    return [];
-                }
-
-                if (asset is SpawnAsset spawnAsset2)
-                {
-                    spawnItems.AddRange(GetSpawnItems(spawnAsset2));
-                }
-
-                if (asset is ItemAsset itemAsset)
-                {
-                    spawnItems.Add(new SpawnItemInfo()
-                    {
-                        AssetId = itemAsset.id,
-                        Name = itemAsset.itemName,
-                        Weight = spawnTable.weight
-                    });
-                }
-            }
-
-            return spawnItems;
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Both;

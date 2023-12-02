@@ -36,13 +36,54 @@ namespace RestoreMonarchy.SpawnsManager
             Logger.Log($"{Name} has been unloaded!", ConsoleColor.Yellow);
         }
 
+        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset, bool isVehicle = false)
+        {
+            List<SpawnItemInfo> spawnItems = new();
+
+            foreach (SpawnTable spawnTable in spawnAsset.tables)
+            {
+                EAssetType assetType = isVehicle ? EAssetType.VEHICLE : EAssetType.ITEM;
+                Asset asset = spawnTable.FindAsset(assetType);
+
+                if (asset == null)
+                {
+                    return [];
+                }
+
+                if (asset is SpawnAsset spawnAsset2)
+                {
+                    spawnItems.AddRange(GetSpawnItems(spawnAsset2, isVehicle));
+                } else if (asset is ItemAsset itemAsset)
+                {
+                    spawnItems.Add(new SpawnItemInfo()
+                    {
+                        AssetId = itemAsset.id,
+                        Name = itemAsset.itemName,
+                        Weight = spawnTable.weight
+                    });
+                } else if (asset is VehicleAsset vehicleAsset)
+                {
+                    spawnItems.Add(new SpawnItemInfo()
+                    {
+                        AssetId = vehicleAsset.id,
+                        Name = vehicleAsset.vehicleName,
+                        Weight = spawnTable.weight
+                    });
+                }
+            }
+
+            return spawnItems;
+        }
+
         private void OnPreLevelLoaded(int level)
         {
+            LevelVehicles.load();
             Logger.Log("Loading spawn assets...", ConsoleColor.Yellow);
             foreach (SpawnAssetConfig spawnAssetConfig in Configuration.Instance.SpawnAssets)
             {
                 SpawnAsset asset = new()
                 {
+                    GUID = Guid.NewGuid(),
                     id = spawnAssetConfig.Id,
                     name = spawnAssetConfig.Name
                 };
