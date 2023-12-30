@@ -36,9 +36,14 @@ namespace RestoreMonarchy.SpawnsManager
             Logger.Log($"{Name} has been unloaded!", ConsoleColor.Yellow);
         }
 
-        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset, bool isVehicle = false)
+        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset, bool isVehicle = false, int num = 0)
         {
             List<SpawnItemInfo> spawnItems = new();
+
+            if (num++ > 32)
+            {
+                return spawnItems;
+            }
 
             foreach (SpawnTable spawnTable in spawnAsset.tables)
             {
@@ -52,7 +57,7 @@ namespace RestoreMonarchy.SpawnsManager
 
                 if (asset is SpawnAsset spawnAsset2)
                 {
-                    spawnItems.AddRange(GetSpawnItems(spawnAsset2, isVehicle));
+                    spawnItems.AddRange(GetSpawnItems(spawnAsset2, isVehicle, num));
                 } else if (asset is ItemAsset itemAsset)
                 {
                     spawnItems.Add(new SpawnItemInfo()

@@ -14,29 +14,7 @@ namespace RestoreMonarchy.SpawnsManager
         public void LoadDefaults()
         {
             MessageColor = "yellow";
-            SpawnAssets =
-            [
-                new SpawnAssetConfig()
-                {
-                    Id = 380,
-                    Name = "Washington Militia",
-                    Tables =
-                    [
-                        new SpawnTableConfig()
-                        {
-                            AssetId = 1441,
-                            Weight = 100,
-                            Name = "Shadowstalker MK 2"
-                        },
-                        new SpawnTableConfig()
-                        {
-                            AssetId = 1443,
-                            Weight = 200,
-                            Name = "Shadowstalker MK 2 Drum"
-                        },
-                    ]
-                }
-            ];
+            SpawnAssets = [];
         }
     }
 }

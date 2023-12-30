@@ -23,10 +23,34 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 return;
             }
 
-            List<SpawnAssetInfo> spawnAssetInfos = LevelZombies.tables.Select(x => new SpawnAssetInfo(x.lootID, x.name)).ToList();
-            spawnAssetInfos.AddRange(LevelItems.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name)));
-            spawnAssetInfos.AddRange(LevelVehicles.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, true)));
-            spawnAssetInfos.AddRange(LevelAnimals.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name)));
+            List<SpawnAssetInfo> spawnAssetInfos = LevelZombies.tables.Select(x => new SpawnAssetInfo(x.lootID, x.name, "Zombie_")).ToList();
+            spawnAssetInfos.AddRange(LevelItems.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Item_")));
+            spawnAssetInfos.AddRange(LevelVehicles.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Vehicle_", true)));
+            spawnAssetInfos.AddRange(LevelAnimals.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Animal_")));
+
+            for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 += 1)
+            {
+                for (byte b4 = 0; b4 < Regions.WORLD_SIZE; b4 += 1)
+                {
+                    List<ResourceSpawnpoint> resourceSpawnpoints = LevelGround.trees[b3, b4];
+
+                    foreach (ResourceSpawnpoint resourceSpawnpoint in resourceSpawnpoints)
+                    {
+                        if (resourceSpawnpoint.asset == null)
+                        {
+                            continue;
+                        }
+
+                        if (spawnAssetInfos.Any(x => x.Id == resourceSpawnpoint.asset.rewardID && x.Origin == resourceSpawnpoint.asset.resourceName))
+                        {
+                            continue;
+                        }
+
+                        SpawnAssetInfo spawnAssetInfo = new(resourceSpawnpoint.asset.rewardID, resourceSpawnpoint.asset.resourceName, "Resource_");
+                        spawnAssetInfos.Add(spawnAssetInfo);
+                    }
+                }
+            }
 
             spawnAssetInfos.RemoveAll(x => x.Id == 0);
 
@@ -46,7 +70,7 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 {
                     Id = spawnAsset.id,
                     Name = spawnAsset.name,
-                    Description = string.Join(", ", groupedSpawnAssetInfo.Select(x => x.Origin))
+                    Description = string.Join(", ", groupedSpawnAssetInfo.Select(x => x.Prefix + x.Origin))
                 };
 
                 List<SpawnTableConfig> spawnTableConfigs = new();
@@ -75,9 +99,10 @@ namespace RestoreMonarchy.SpawnsManager.Commands
 
         private class SpawnAssetInfo
         {
-            public SpawnAssetInfo(ushort id, string origin, bool isVehicle = false)
+            public SpawnAssetInfo(ushort id, string origin, string prefix, bool isVehicle = false)
             {
                 Id = id;
+                Prefix = prefix;
                 Origin = origin;
                 IsVehicle = isVehicle;
             }
@@ -85,6 +110,7 @@ namespace RestoreMonarchy.SpawnsManager.Commands
             public ushort Id { get; set; }
             public string Origin { get; set; }
             public bool IsVehicle { get; set; }
+            public string Prefix { get; set; }
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Console;
