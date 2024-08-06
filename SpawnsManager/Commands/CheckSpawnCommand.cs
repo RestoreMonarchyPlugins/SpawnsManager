@@ -26,12 +26,12 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 return;
             }
 
-            bool isVehicle = false;
+            EAssetType assetType = EAssetType.ITEM;
 
             string arg2 = command.ElementAtOrDefault(1);
-            if (string.IsNullOrEmpty(arg2))
+            if (!string.IsNullOrEmpty(arg2))
             {
-                bool.TryParse(arg2, out isVehicle);
+                Enum.TryParse(arg2, out assetType);
             }
 
             SpawnAsset spawnAsset = Assets.find(EAssetType.SPAWN, spawnId) as SpawnAsset;
@@ -41,7 +41,7 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 return;
             }
             
-            List<SpawnItemInfo> spawnItems = pluginInstance.GetSpawnItems(spawnAsset, isVehicle);
+            List<SpawnItemInfo> spawnItems = pluginInstance.GetSpawnItems(spawnAsset, assetType);
 
             int sumWeight = spawnItems.Sum(x => x.Weight);
 

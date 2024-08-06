@@ -55,7 +55,7 @@ namespace RestoreMonarchy.SpawnsManager
             LogDebug($"{SpawnAssetsConfiguration.SpawnAssets.Length} spawn assets have been added or overriden!");
         }
 
-        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset, bool isVehicle = false, int num = 0)
+        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset, EAssetType assetType, int num = 0)
         {
             List<SpawnItemInfo> spawnItems = new();
 
@@ -66,8 +66,6 @@ namespace RestoreMonarchy.SpawnsManager
 
             foreach (SpawnTable spawnTable in spawnAsset.tables)
             {
-                EAssetType assetType = isVehicle ? EAssetType.VEHICLE : EAssetType.ITEM;
-
                 Asset asset = spawnTable.FindAsset(assetType);
 
                 if (asset == null)
@@ -77,7 +75,7 @@ namespace RestoreMonarchy.SpawnsManager
 
                 if (asset is SpawnAsset spawnAsset2)
                 {
-                    spawnItems.AddRange(GetSpawnItems(spawnAsset2, isVehicle, num));
+                    spawnItems.AddRange(GetSpawnItems(spawnAsset2, assetType, num));
                 }
                 else if (asset is ItemAsset itemAsset)
                 {
@@ -103,6 +101,15 @@ namespace RestoreMonarchy.SpawnsManager
                     {
                         AssetId = vehicleRedirectorAsset.id,
                         Name = vehicleRedirectorAsset.FriendlyName,
+                        Weight = spawnTable.weight
+                    });
+                }
+                else if (asset is AnimalAsset animalAsset)
+                {
+                    spawnItems.Add(new SpawnItemInfo()
+                    {
+                        AssetId = animalAsset.id,
+                        Name = animalAsset.animalName,
                         Weight = spawnTable.weight
                     });
                 }

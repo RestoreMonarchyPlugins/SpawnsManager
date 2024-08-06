@@ -56,8 +56,8 @@ namespace RestoreMonarchy.SpawnsManager
         {
             List<SpawnAssetInfo> spawnAssetInfos = LevelZombies.tables.Select(x => new SpawnAssetInfo(x.lootID, x.name, "Zombie_")).ToList();
             spawnAssetInfos.AddRange(LevelItems.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Item_")));
-            spawnAssetInfos.AddRange(LevelVehicles.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Vehicle_", true)));
-            spawnAssetInfos.AddRange(LevelAnimals.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Animal_")));
+            spawnAssetInfos.AddRange(LevelVehicles.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Vehicle_", EAssetType.VEHICLE)));
+            spawnAssetInfos.AddRange(LevelAnimals.tables.Select(x => new SpawnAssetInfo(x.tableID, x.name, "Animal_", EAssetType.ANIMAL)));
 
             for (byte b3 = 0; b3 < Regions.WORLD_SIZE; b3 += 1)
             {
@@ -107,7 +107,7 @@ namespace RestoreMonarchy.SpawnsManager
 
                 List<SpawnTableConfig> spawnTableConfigs = new();
 
-                IEnumerable<SpawnItemInfo> spawnItemInfos = GetSpawnItems(spawnAsset, spawnAssetInfo.IsVehicle);
+                IEnumerable<SpawnItemInfo> spawnItemInfos = GetSpawnItems(spawnAsset, spawnAssetInfo.AssetType);
                 foreach (SpawnItemInfo spawnItemInfo in spawnItemInfos)
                 {
                     SpawnTableConfig spawnTableConfig = new()

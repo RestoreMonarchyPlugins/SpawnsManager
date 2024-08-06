@@ -1,18 +1,20 @@
-﻿namespace RestoreMonarchy.SpawnsManager.Models
+﻿using SDG.Unturned;
+
+namespace RestoreMonarchy.SpawnsManager.Models
 {
     public class SpawnAssetInfo
     {
-        public SpawnAssetInfo(ushort id, string origin, string prefix, bool isVehicle = false)
+        public SpawnAssetInfo(ushort id, string origin, string prefix, EAssetType assetType = EAssetType.ITEM)
         {
             Id = id;
             Prefix = prefix;
             Origin = origin;
-            IsVehicle = isVehicle;
+            AssetType = assetType;
         }
 
         public ushort Id { get; set; }
         public string Origin { get; set; }
-        public bool IsVehicle { get; set; }
+        public EAssetType AssetType { get; set; }
         public string Prefix { get; set; }
     }
 }
