@@ -16,13 +16,13 @@ namespace RestoreMonarchy.SpawnsManager.Commands
         {
             if (command.Length < 1)
             {
-                UnturnedChat.Say(caller, "You must specify spawn id.", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, "You must specify spawn id.");
                 return;
             }
 
             if (!ushort.TryParse(command[0], out ushort spawnId))
             {
-                UnturnedChat.Say(caller, "Spawn id is invalid.", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, "Spawn id is invalid.");
                 return;
             }
 
@@ -37,7 +37,7 @@ namespace RestoreMonarchy.SpawnsManager.Commands
             SpawnAsset spawnAsset = Assets.find(EAssetType.SPAWN, spawnId) as SpawnAsset;
             if (spawnAsset == null)
             {
-                UnturnedChat.Say(caller, "Spawn asset not found.", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, "Spawn asset not found.");
                 return;
             }
             
@@ -45,15 +45,15 @@ namespace RestoreMonarchy.SpawnsManager.Commands
 
             int sumWeight = spawnItems.Sum(x => x.Weight);
 
-            UnturnedChat.Say(caller, $"Spawn {spawnAsset.id} ({spawnAsset.name}) has {spawnItems.Count} items:", pluginInstance.MessageColor);
+            UnturnedChat.Say(caller, $"Spawn {spawnAsset.id} ({spawnAsset.name}) has {spawnItems.Count} items:");
             foreach (SpawnItemInfo spawnItem in spawnItems)
             {
                 decimal chance = Math.Round((decimal)spawnItem.Weight / sumWeight * 100, 4);
-                UnturnedChat.Say(caller, $"- {spawnItem.Name} ({spawnItem.AssetId}) has {chance}% ({spawnItem.Weight}) chance", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, $"- {spawnItem.Name} ({spawnItem.AssetId}) has {chance}% ({spawnItem.Weight}) chance");
             }
         }
 
-        public AllowedCaller AllowedCaller => AllowedCaller.Both;
+        public AllowedCaller AllowedCaller => AllowedCaller.Console;
 
         public string Name => "checkspawn";
 

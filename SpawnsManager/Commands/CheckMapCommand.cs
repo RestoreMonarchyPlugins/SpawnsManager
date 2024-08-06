@@ -17,8 +17,8 @@ namespace RestoreMonarchy.SpawnsManager.Commands
 
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            UnturnedChat.Say(caller, $"Spawns of {Provider.map} map", pluginInstance.MessageColor);
-            UnturnedChat.Say(caller, $"Zombies ({LevelZombies.tables.Count}) spawns:", pluginInstance.MessageColor);
+            UnturnedChat.Say(caller, $"Spawns of {Provider.map} map");
+            UnturnedChat.Say(caller, $"Zombies ({LevelZombies.tables.Count}) spawns:");
             foreach (ZombieTable zombieTable in LevelZombies.tables)
             {
                 if (zombieTable.lootID == 0)
@@ -33,10 +33,10 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                 }
 
                 string zombie = zombieTable.isMega ? "Mega" : "Normal";
-                UnturnedChat.Say(caller, $"- {zombie} zombie {zombieTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name})", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, $"- {zombie} zombie {zombieTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name}) [{spawnAsset.GUID}]");
             }
 
-            UnturnedChat.Say(caller, $"Items ({LevelItems.tables.Count}) spawns:", pluginInstance.MessageColor);
+            UnturnedChat.Say(caller, $"Items ({LevelItems.tables.Count}) spawns:");
             foreach (ItemTable itemTable in LevelItems.tables)
             {
                 if (itemTable.tableID == 0)
@@ -50,10 +50,10 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                     continue;
                 }
 
-                UnturnedChat.Say(caller, $"- Item {itemTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name})", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, $"- Item {itemTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name}) [{spawnAsset.GUID}]");
             }
 
-            UnturnedChat.Say(caller, $"Vehicles ({LevelVehicles.tables.Count}) spawns:", pluginInstance.MessageColor);
+            UnturnedChat.Say(caller, $"Vehicles ({LevelVehicles.tables.Count}) spawns:");
             foreach (VehicleTable vehicleTable in LevelVehicles.tables)
             {
                 if (vehicleTable.tableID == 0)
@@ -67,10 +67,10 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                     continue;
                 }
 
-                UnturnedChat.Say(caller, $"- Vehicle {vehicleTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name})", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, $"- Vehicle {vehicleTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name}) [{spawnAsset.GUID}]");
             }
 
-            UnturnedChat.Say(caller, $"Animals ({LevelAnimals.tables.Count}) spawns:", pluginInstance.MessageColor);
+            UnturnedChat.Say(caller, $"Animals ({LevelAnimals.tables.Count}) spawns:");
             foreach (AnimalTable animalTable in LevelAnimals.tables)
             {
                 if (animalTable.tableID == 0)
@@ -84,11 +84,11 @@ namespace RestoreMonarchy.SpawnsManager.Commands
                     continue;
                 }
 
-                UnturnedChat.Say(caller, $"- Animal {animalTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name})", pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, $"- Animal {animalTable.name} has spawn asset {spawnAsset.id} ({spawnAsset.name}) [{spawnAsset.GUID}]");
             }
         }
 
-        public AllowedCaller AllowedCaller => AllowedCaller.Both;
+        public AllowedCaller AllowedCaller => AllowedCaller.Console;
 
         public string Name => "checkmap";
 

@@ -16,6 +16,7 @@ namespace RestoreMonarchy.SpawnsManager.Models
         [XmlAttribute]
         public string Description { get; set; }
 
+        public Guid GUID { get; set; }
         [XmlArrayItem("Table")]
         public SpawnTableConfig[] Tables { get; set; }
 
