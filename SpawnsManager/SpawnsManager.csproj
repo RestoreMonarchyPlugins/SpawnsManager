@@ -8,6 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="RestoreMonarchy.RocketRedist" Version="3.24.4" />
+	  <PackageReference Include="RestoreMonarchy.RocketRedist" Version="3.24.4" ExcludeAssets="*" />
 	</ItemGroup>
 </Project>
