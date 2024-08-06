@@ -52,7 +52,6 @@ This is spawn asset for vehicles. You can modify it, for example add desert mili
         <Table AssetId="56" Weight="10" Name="Humvee_Desert" />
         <Table AssetId="55" Weight="10" Name="Ural_Desert" />
         <Table AssetId="57" Weight="10" Name="APC_Desert" />
-
     </Tables>
 </SpawnAsset>
 ```
