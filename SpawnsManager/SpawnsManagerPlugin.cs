@@ -2,7 +2,6 @@
 using RestoreMonarchy.SpawnsManager.Models;
 using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
-using Rocket.Unturned.Chat;
 using SDG.Unturned;
 using System;
 using System.Xml.Serialization;
@@ -24,11 +23,8 @@ namespace RestoreMonarchy.SpawnsManager
 
             if (Level.isLoaded)
             {
-                if (SpawnAssetsConfiguration != null)
-                {
-                    SaveMapConfiguration();
-                    AddAndOverrideSpawnAssets();
-                }
+                SaveMapConfiguration();
+                AddAndOverrideSpawnAssets();
 
                 ItemsHelper.DespawnItems();
                 VehiclesHelper.DespawnVehicles();
