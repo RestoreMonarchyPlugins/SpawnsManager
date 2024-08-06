@@ -13,7 +13,7 @@ namespace RestoreMonarchy.SpawnsManager
         public static SpawnsManagerPlugin Instance { get; private set; }
 
         public SpawnAssetsConfiguration SpawnAssetsConfiguration { get; set; }
-        private XmlSerializer xmlSerializer = new(typeof(SpawnAssetsConfiguration));
+        private XmlSerializer xmlSerializer = new(typeof(SpawnAssetsConfiguration), new XmlRootAttribute("SpawnAssetsConfiguration"));
 
         protected override void Load()
         {
