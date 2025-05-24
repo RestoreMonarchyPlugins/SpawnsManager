@@ -1,7 +1,9 @@
 ﻿using RestoreMonarchy.SpawnsManager.Helpers;
 using RestoreMonarchy.SpawnsManager.Models;
 using SDG.Unturned;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RestoreMonarchy.SpawnsManager
 {
@@ -55,27 +57,34 @@ namespace RestoreMonarchy.SpawnsManager
             LogDebug($"{SpawnAssetsConfiguration.SpawnAssets.Length} spawn assets have been added or overriden!");
         }
 
-        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset, EAssetType assetType, int num = 0)
+        public List<SpawnItemInfo> GetSpawnItems(SpawnAsset spawnAsset, EAssetType assetType, List<SpawnItemInfo> spawnItems = null, int depth = 0, decimal chance = 1)
         {
-            List<SpawnItemInfo> spawnItems = new();
+            bool isFirstDepth = depth == 0;
+            if (spawnItems == null)
+            {
+                spawnItems = new List<SpawnItemInfo>();
+            }
 
-            if (num++ > 32)
+            if (depth > 32)
             {
                 return spawnItems;
             }
 
+            decimal sumWeight = spawnAsset.tables.Sum(x => x.weight);
             foreach (SpawnTable spawnTable in spawnAsset.tables)
             {
                 Asset asset = spawnTable.FindAsset(assetType);
-
                 if (asset == null)
                 {
-                    return [];
+                    continue;
                 }
+
+                decimal spawnChance = spawnTable.weight / sumWeight * chance;
 
                 if (asset is SpawnAsset spawnAsset2)
                 {
-                    spawnItems.AddRange(GetSpawnItems(spawnAsset2, assetType, num));
+                    depth++;
+                    GetSpawnItems(spawnAsset2, assetType, spawnItems, depth, spawnChance);
                 }
                 else if (asset is ItemAsset itemAsset)
                 {
@@ -83,7 +92,7 @@ namespace RestoreMonarchy.SpawnsManager
                     {
                         AssetId = itemAsset.id,
                         Name = itemAsset.itemName,
-                        Weight = spawnTable.weight
+                        Chance = spawnChance
                     });
                 }
                 else if (asset is VehicleAsset vehicleAsset)
@@ -92,7 +101,7 @@ namespace RestoreMonarchy.SpawnsManager
                     {
                         AssetId = vehicleAsset.id,
                         Name = vehicleAsset.vehicleName,
-                        Weight = spawnTable.weight
+                        Chance = spawnChance
                     });
                 }
                 else if (asset is VehicleRedirectorAsset vehicleRedirectorAsset)
@@ -101,7 +110,7 @@ namespace RestoreMonarchy.SpawnsManager
                     {
                         AssetId = vehicleRedirectorAsset.id,
                         Name = vehicleRedirectorAsset.FriendlyName,
-                        Weight = spawnTable.weight
+                        Chance = spawnChance
                     });
                 }
                 else if (asset is AnimalAsset animalAsset)
@@ -110,13 +119,35 @@ namespace RestoreMonarchy.SpawnsManager
                     {
                         AssetId = animalAsset.id,
                         Name = animalAsset.animalName,
-                        Weight = spawnTable.weight
+                        Chance = spawnChance
                     });
                 }
                 else
                 {
                     LogDebug($"Unknown asset type: {asset.GetType().Name} - {asset.id} - {asset.name}");
                 }
+            }
+
+            if (isFirstDepth)
+            {
+                // aggregate spawn items by AssetId
+                spawnItems = spawnItems
+                    .GroupBy(x => x.AssetId)
+                    .Select(g => new SpawnItemInfo
+                    {
+                        AssetId = g.Key,
+                        Name = g.First().Name,
+                        Chance = g.Sum(x => x.Chance)
+                    })
+                    .ToList();
+
+                // calculate weights
+                int totalWeight = 10000;
+                foreach (SpawnItemInfo spawnItem in spawnItems)
+                {
+                    spawnItem.Weight = Math.Max(1, (int)(spawnItem.Chance * totalWeight));
+                }
+                spawnItems = spawnItems.OrderByDescending(x => x.Weight).ToList();
             }
 
             return spawnItems;
